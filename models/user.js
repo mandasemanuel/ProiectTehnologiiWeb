@@ -2,31 +2,31 @@ const { DataTypes } = require("sequelize/dist");
 const sequelize = require("../sequelize");
 
 const User = sequelize.define(
-    "user",
+    "User",
     {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        firstName: {
-            type: DataTypes.STRING,
-            validate: {
-                len: [3,30]
-            }
-        },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         username: {
             type: DataTypes.STRING,
+            unique: true,
             allowNull: false
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false
         },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+        },
+        group: {
+            type: DataTypes.STRING,
+            defaultValue: ""
+        }
 
     }
 );

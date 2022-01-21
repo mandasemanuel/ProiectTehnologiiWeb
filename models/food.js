@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize/dist");
 const sequelize = require("../sequelize");
 
 const Food = sequelize.define(
-    "food",
+    "Foods",
     {
         id: {
             type: DataTypes.INTEGER,
@@ -17,6 +17,14 @@ const Food = sequelize.define(
         },
         available: {
             type: DataTypes.BOOLEAN,
+            defaultValue: true
+        },
+        category: {
+            type: DataTypes.STRING
+        },
+        claimedBy: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     }
 );

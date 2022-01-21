@@ -24,6 +24,21 @@ router
         }
     })
 
+router
+    .route("/claimedFoods/:userId")
+    .get(async (req, res) => {
+        try{
+            const foods = await Food.findAll({
+                where: {
+                    claimedBy: req.params.userId
+                }
+            });
+            return res.status(200).json(foods);
+        } catch(err){
+            return res.status(500).json(err);
+        }
+    })
+
 
 router
     .route("/foods/:id")
@@ -44,7 +59,10 @@ router
         try {
             const food = await Food.findByPk(req.params.id);
             if(food){
-                const updateFood = await food.update(req.body);
+                const updateFood = await food.update({
+                    claimedBy: 0,
+                    available: true
+                });
                 return res.status(200).json(food);
             } else {
                 return res.status(404).json({error: `Food with id ${req.params.id} not found`})
@@ -61,6 +79,27 @@ router
             return res.status(200).json(await food.destroy())
         } else {
             return res.status(404).json( {error: `Food with id ${req.params.id} not found`})
+        }
+    })
+
+router
+    .route("/foods/:id/:userId")
+    .put(async (req,res) => {
+        try {
+            const food = await Food.findByPk(req.params.id);
+            if(food){
+                const updateFood = await food.update({
+                    claimedBy: req.params.userId,
+                    available: false
+                });
+                return res.status(200).json(food);
+            } else {
+                return res.status(404).json({error: `Food with id ${req.params.id} not found`})
+            }
+            
+        } catch(err) {
+            
+            return res.status(500).json(err);
         }
     })
 

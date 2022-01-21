@@ -1,22 +1,18 @@
 "use strict";
 
 const express = require('express');
+const cors = require('cors')
 const sequelize = require('./sequelize');
-
-const User = require("./models/user");
-const Food = require("./models/food");
-const Category = require("./models/category");
-const Group = require("./models/group");
+const User = require('./models/user');
+const Food = require('./models/food');
 
 
 // Relatii intre entitati
-
-Category.hasMany(Food);
-Group.hasMany(User);
-
-
+User.hasMany(Food)
+Food.belongsTo(User)
 
 const app = express();
+app.use(cors())
 
 
 app.use(
@@ -34,13 +30,23 @@ app.use((error, request, response, next) => {
 // app.use("/status",require("./routes/testRouter"));
 app.use("/app", require("./routes/users"));
 app.use("/app", require("./routes/foods"));
-app.use("/app", require("./routes/categories"));
-app.use("/app", require("./routes/groups"));
 
-app.listen(7000, async () => {
-    console.log('Server started on http://localhost:7000');
+
+app.use('/login', (req, res) => {
+    res.send( {
+        token: 'test123'
+    })
+})
+
+
+
+app.listen(8080, async () => {
+    console.log('Server started on http://localhost:8080');
     try {
         await sequelize.authenticate();
+        // await sequelize.sync({alter: true}).then( () => {
+        //     console.log("All models were syncronized succesfully");
+        // })
         console.log("Connection has been established succesfully");
     } catch (err) {
         console.error("Unable to connect to the database: ", error);
